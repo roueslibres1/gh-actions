@@ -1,0 +1,58 @@
+name: Setup golang
+description: manages go version  & go cache & go mod cache
+inputs:
+  go-version:
+    description: the go version
+    required: true
+outputs:
+  cache-hit:
+    description: "Forward actions/cache cache-hit output"
+    value: ${{ steps.node-cache.outputs.cache-hit }}
+runs:
+  using: "composite" # Mandatory parameter
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ inputs.go-version }}
+    - name: Go Cache paths
+      id: go-cache-paths
+      shell: bash
+      run: |
+        echo "::set-output name=go-build::$(go env GOCACHE)"
+        echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+    - name: Go Build Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.go-cache-paths.outputs.go-build }}
+        key: ${{ runner.os }}-go-build-${{ hashFiles('**/go.sum') }}
+    - name: Go Mod Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ steps.go-cache-paths.outputs.go-mod }}
+        key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum') }}
+    - name: Add ~/go/bin to PATH
+      shell: bash
+      run: |
+        echo "/home/runner/go/bin" >> $GITHUB_PATH
+    - name: install required packages
+      shell: bash
+      run: |
+        export BINDIR=/home/runner/go/bin
+        curl -sfL https://git.io/fhJZU | /bin/bash
+    - uses: benjlevesque/short-sha@v1.2
+      id: short-sha
+      with:
+        length: 7
+    - name: svermaker generate
+      id: svermaker
+      shell: bash
+      run: |
+        export tag=$(git describe --tags)
+        export buildcounter=${{ steps.short-sha.outputs.sha }}
+        svermaker g $tag
+        . buildhelper.tmp
+        echo "::set-output name=is-release::$svermakerRelease"
+        echo "::set-output name=go-build-version::$goModuleBuildVersion"
+        echo "::set-output name=build-version::$svermakerBuildVersion"
+        echo "::set-output name=helm-label::$svermakerHelmLabel"
