@@ -8,6 +8,12 @@ outputs:
   cache-hit:
     description: "Forward actions/cache cache-hit output"
     value: ${{ steps.node-cache.outputs.cache-hit }}
+  svermaker-is-release:
+    description: indicates if this is a release or rc [true/false]
+    value: ${{ steps.svermaker.outputs.is-release }}
+  svermaker-go-build-version:
+    description: golang build version (semvar with prepended v)
+    value: ${{ steps.svermaker.outputs.go-build-version }}
 runs:
   using: "composite" # Mandatory parameter
   steps:
