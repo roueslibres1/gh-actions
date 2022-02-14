@@ -1,0 +1,15 @@
+name: create tag
+description: Creates a tag
+inputs:
+  tag:
+    description: Tag to create
+    required: true
+  commit_sha:
+    description: The commit SHA on which to create the Tag. Uses latest commit by default
+    required: false
+runs:
+  using: docker
+  image: Dockerfile
+branding:
+  icon: tag
+  color: green
