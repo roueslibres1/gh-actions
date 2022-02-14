@@ -19,6 +19,10 @@ echo "[create-tag] Create tag '${TAG}'."
 
 git tag "${TAG}" "${SHA}"
 
+if [ -n "${INPUT_GITHUB_TOKEN}" ]; then
+  git remote set-url origin "https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+fi
+
 # Push tag
 echo "[create-tag] Push tag '${TAG}'."
 git push origin "${TAG}"
