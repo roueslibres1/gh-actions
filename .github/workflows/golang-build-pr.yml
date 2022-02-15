@@ -1,0 +1,57 @@
+name: golang-ci-build_pr
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+env:
+  # Golang version to use across CI steps
+  GOLANG_VERSION: "1.17.6"
+
+jobs:
+  build-go:
+    name: build-go
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+      - name: "🔧 setup go"
+        uses: roueslibres1/gh-actions/setup-go@main
+        id: setup_go
+        with:
+          go-version: ${{env.GOLANG_VERSION}}
+      - name: Build
+        run: |
+          make build_all
+  test-go:
+    name: test-go
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+      - name: "🔧 setup go"
+        uses: roueslibres1/gh-actions/setup-go@main
+        id: setup_go
+        with:
+          go-version: ${{env.GOLANG_VERSION}}
+      - name: Test
+        run: |
+          make test
+  codegen-go:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+      - name: "🔧 setup go"
+        uses: roueslibres1/gh-actions/setup-go@main
+        id: setup_go
+        with:
+          go-version: ${{env.GOLANG_VERSION}}
+      - name:  ":taco: generate"
+        run: |
+          make generate
+          git diff --exit-code -- .
+      - name: check tidyness of go.mod and go.sum
+        run: |
+          go mod tidy -compat=1.17
+          git diff --exit-code -- .
