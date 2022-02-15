@@ -3,10 +3,18 @@ on:
   # push:
   #   branches: [main]
   workflow_call:
+    inputs:
+      go-version:
+        description: the go version
+        required: true
+        type: string
+        default: "1.17"
 
-env:
-  # Golang version to use across CI steps
-  GOLANG_VERSION: "1.17.6"
+    secrets:
+      token:
+        required: "true"
+        description: secret used to check out repository. If actions in this workflow should trigger other actions provice as PAT otherwise the github_token will suffice
+
 
 jobs:
   build-go:
@@ -19,7 +27,7 @@ jobs:
         uses: roueslibres1/gh-actions/setup-go@main
         id: setup_go
         with:
-          go-version: ${{env.GOLANG_VERSION}}
+          go-version: ${{inputs.go-version}}
       - name: "🏗 Build"
         run: |
           make build_all
@@ -33,7 +41,7 @@ jobs:
         uses: roueslibres1/gh-actions/setup-go@main
         id: setup_go
         with:
-          go-version: ${{env.GOLANG_VERSION}}
+          go-version: ${{inputs.go-version}}
       - name: "🧪 Test"
         run: |
           make test
@@ -47,7 +55,7 @@ jobs:
         uses: roueslibres1/gh-actions/setup-go@main
         id: setup_go
         with:
-          go-version: ${{env.GOLANG_VERSION}}
+          go-version: ${{inputs.go-version}}
       - name: "🔌 generate"
         run: |
           make generate
@@ -64,16 +72,15 @@ jobs:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.CI_TOKEN }}
+          token: ${{ secrets.token }}
       - name: "🔧 setup go"
         uses: roueslibres1/gh-actions/setup-go@main
         id: setup_go
         with:
-          go-version: ${{env.GOLANG_VERSION}}
+          go-version: ${{inputs.go-version}}
       - name: "🙀 Autotag"
         if: steps.setup_go.outputs.svermaker-is-release == 'true'
         uses: roueslibres1/gh-actions/create-tag@main
         id: create_tag
         with:
           tag: ${{ steps.setup_go.outputs.svermaker-go-build-version }}
-          github_token: ${{ secrets.CI_TOKEN }}
