@@ -4,10 +4,12 @@ on:
   #   tags:
   #     - "v*"
   workflow_call:
-
-env:
-  # Golang version to use across CI steps
-  GOLANG_VERSION: "1.17.6"
+    inputs:
+      go-version:
+        description: the go version
+        required: true
+        type: string
+        default: "1.17"
 
 jobs:
   release:
@@ -20,7 +22,7 @@ jobs:
         uses: roueslibres1/gh-actions/setup-go@main
         id: setup_go
         with:
-          go-version: ${{env.GOLANG_VERSION}}
+          go-version: ${{inputs.go-version}}
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
