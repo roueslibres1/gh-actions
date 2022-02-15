@@ -12,7 +12,7 @@ on:
 
     secrets:
       token:
-        required: "true"
+        required: true
         description: secret used to check out repository. If actions in this workflow should trigger other actions provice as PAT otherwise the github_token will suffice
 
 jobs:
