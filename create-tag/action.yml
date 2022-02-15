@@ -1,10 +1,6 @@
 name: create tag
 description: Creates a tag
 inputs:
-  github_token:
-    description: "GITHUB_TOKEN. Set this to a PAT if the tag has to trigger an other workflow"
-    default: "${{ github.token }}"
-    required: false
   tag:
     description: Tag to create
     required: true
