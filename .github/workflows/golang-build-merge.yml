@@ -9,7 +9,11 @@ on:
         required: false
         type: string
         default: "1.17"
-
+      actions-ref:
+        description: the ref actions will be checkout at
+        type: string
+        required: false
+        default: "main"
     secrets:
       token:
         required: true
@@ -22,8 +26,17 @@ jobs:
     steps:
       - name: "☁️checkout repository"
         uses: actions/checkout@v2
+      - name: "☁️ checkout action repository"
+        uses: actions/checkout@v2
+        with:
+          repository: roueslibres1/gh-actions
+          ref: ${{inputs.actions-ref}}
+          path: .github/actions
+      - name: 🔑 Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
       - name: "🔧 setup go"
-        uses: roueslibres1/gh-actions/setup-go@main
+        uses: ./.github/actions/setup-go
         id: setup_go
         with:
           go-version: ${{inputs.go-version}}
@@ -36,8 +49,17 @@ jobs:
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
+      - name: "☁️ checkout action repository"
+        uses: actions/checkout@v2
+        with:
+          repository: roueslibres1/gh-actions
+          ref: ${{inputs.actions-ref}}
+          path: .github/actions
+      - name: 🔑 Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
       - name: "🔧 setup go"
-        uses: roueslibres1/gh-actions/setup-go@main
+        uses: ./.github/actions/setup-go
         id: setup_go
         with:
           go-version: ${{inputs.go-version}}
@@ -50,8 +72,17 @@ jobs:
     steps:
       - name: "☁️ checkout repository"
         uses: actions/checkout@v2
+      - name: "☁️ checkout action repository"
+        uses: actions/checkout@v2
+        with:
+          repository: roueslibres1/gh-actions
+          ref: ${{inputs.actions-ref}}
+          path: .github/actions
+      - name: 🔑 Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
       - name: "🔧 setup go"
-        uses: roueslibres1/gh-actions/setup-go@main
+        uses: ./.github/actions/setup-go
         id: setup_go
         with:
           go-version: ${{inputs.go-version}}
@@ -72,8 +103,17 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.token }}
+      - name: "☁️ checkout action repository"
+        uses: actions/checkout@v2
+        with:
+          repository: roueslibres1/gh-actions
+          ref: ${{inputs.actions-ref}}
+          path: .github/actions
+      - name: 🔑 Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
       - name: "🔧 setup go"
-        uses: roueslibres1/gh-actions/setup-go@main
+        uses: ./.github/actions/setup-go
         id: setup_go
         with:
           go-version: ${{inputs.go-version}}
