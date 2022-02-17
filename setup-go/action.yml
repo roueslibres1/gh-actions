@@ -44,6 +44,7 @@ runs:
     - name: install required packages
       shell: bash
       run: |
+        go install golang.org/x/tools/cmd/goimports@latest
         export BINDIR=/home/runner/go/bin
         curl -sfL https://git.io/fhJZU | /bin/bash
     - uses: benjlevesque/short-sha@v1.2
