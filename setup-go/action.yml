@@ -50,7 +50,7 @@ runs:
     - name: Download all Go modules
       shell: bash
       run: |
-        go mod download
+        go mod download -x
     - uses: benjlevesque/short-sha@v1.2
       id: short-sha
       with:
