@@ -21,17 +21,6 @@ runs:
       uses: actions/setup-go@v2
       with:
         go-version: ${{ inputs.go-version }}
-    - name: install required packages
-      shell: bash
-      run: |
-        export GOPRIVATE=github.com/roueslibres1/*
-        go install golang.org/x/tools/cmd/goimports@latest
-        go install code.cestus.io/tools/fabricator/cmd/fabricator@latest
-        go install github.com/roueslibres1/fabricator-generate-go/cmd/fabricator-generate-go@latest
-        go install github.com/roueslibres1/fabricator-generate-project-go/cmd/fabricator-generate-project-go@latest
-        go install github.com/roueslibres1/fabricator-generate-plugin-go/cmd/fabricator-generate-plugin-go@latest
-        export BINDIR=/home/runner/go/bin
-        curl -sfL https://git.io/fhJZU | /bin/bash
     - name: Go Cache paths
       id: go-cache-paths
       shell: bash
@@ -60,11 +49,19 @@ runs:
     - name: Download all Go modules
       shell: bash
       run: |
-        go mod download -x
+        go mod download
     - uses: benjlevesque/short-sha@v1.2
       id: short-sha
       with:
         length: 7
+    - name: install required packages
+      shell: bash
+      run: |
+        export GOPRIVATE=github.com/roueslibres1/*
+        go install golang.org/x/tools/cmd/goimports@latest
+        go install code.cestus.io/tools/fabricator/cmd/fabricator@latest
+        export BINDIR=/home/runner/go/bin
+        curl -sfL https://git.io/fhJZU | /bin/bash
     - name: svermaker generate
       id: svermaker
       shell: bash

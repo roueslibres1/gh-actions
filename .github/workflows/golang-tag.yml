@@ -36,6 +36,10 @@ jobs:
       - name: 🔑 Granting private modules access
         run: |
           git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
+      - name: Install tools
+        uses: ./.github/actions/install-tools
+        with:
+          token: ${{secrets.token}}
       - name: "🔧 setup go"
         uses: ./.github/actions/setup-go
         id: setup_go
