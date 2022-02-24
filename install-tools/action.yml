@@ -8,17 +8,17 @@ runs:
   using: "composite" # Mandatory parameter
   steps:
     - name: Install fabricator-generate-project-go
-      uses: roueslibres1/action-install-release@init
+      uses: roueslibres1/action-install-release@main
       with: # Grab the latest version
         repo: roueslibres1/fabricator-generate-project-go
         token: ${{inputs.token}}
     - name: Install fabricator-generate-plugin-go
-      uses: roueslibres1/action-install-release@init
+      uses: roueslibres1/action-install-release@main
       with: # Grab the latest version
         repo: roueslibres1/fabricator-generate-plugin-go
         token: ${{inputs.token}}
     - name: Install fabricator-generate-go
-      uses: roueslibres1/action-install-release@init
+      uses: roueslibres1/action-install-release@main
       with: # Grab the latest version
         repo: roueslibres1/fabricator-generate-go
         token: ${{inputs.token}}
