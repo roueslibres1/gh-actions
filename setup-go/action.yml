@@ -60,6 +60,7 @@ runs:
         export GOPRIVATE=github.com/roueslibres1/*
         go install golang.org/x/tools/cmd/goimports@latest
         go install code.cestus.io/tools/fabricator/cmd/fabricator@latest
+        go install github.com/google/wire/cmd/wire@v0.5.0
         export BINDIR=/home/runner/go/bin
         curl -sfL https://git.io/fhJZU | /bin/bash
     - name: svermaker generate
