@@ -4,6 +4,10 @@ inputs:
   go-version:
     description: the go version
     required: true
+  go-tooling-only:
+    description: when used in non golang projects. Only installs go and tools
+    required: false
+    default: "false"
 outputs:
   cache-hit:
     description: "Forward actions/cache cache-hit output"
@@ -22,12 +26,14 @@ runs:
       with:
         go-version: ${{ inputs.go-version }}
     - name: Go Cache paths
+      if: "inputs.go-tooling-only == 'false'"
       id: go-cache-paths
       shell: bash
       run: |
         echo "::set-output name=go-build::$(go env GOCACHE)"
         echo "::set-output name=go-mod::$(go env GOMODCACHE)"
     - name: Go Build Cache
+      if: "inputs.go-tooling-only == 'false'"
       uses: actions/cache@v2
       with:
         path: ${{ steps.go-cache-paths.outputs.go-build }}
@@ -37,6 +43,7 @@ runs:
           ${{ runner.os }}-go-build-
     - name: Go Mod Cache
       uses: actions/cache@v2
+      if: "inputs.go-tooling-only == 'false'"
       with:
         path: ${{ steps.go-cache-paths.outputs.go-mod }}
         key: ${{ runner.os }}-go-mod-${{ hashFiles('**/go.sum', '**/Makefile') }}
@@ -47,6 +54,7 @@ runs:
       run: |
         echo "/home/runner/go/bin" >> $GITHUB_PATH
     - name: Download all Go modules
+      if: "inputs.go-tooling-only == 'false'"
       shell: bash
       run: |
         go mod download

@@ -1,0 +1,58 @@
+name: generic_pr_check
+on:
+  # pull_request:
+  #   branches: [main]
+  workflow_call:
+    inputs:
+      go-version:
+        description: the go version
+        required: false
+        type: string
+        default: "1.17"
+      actions-ref:
+        description: the ref actions will be checkout at
+        type: string
+        required: false
+        default: "main"
+    secrets:
+      token:
+        required: true
+        description: secret used to check out repository. If actions in this workflow should trigger other actions provice as PAT otherwise the github_token will suffice
+jobs:
+  test-go:
+    name: 🧪 validate_pr
+    runs-on: ubuntu-latest
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "☁️ checkout action repository"
+        uses: actions/checkout@v2
+        with:
+          repository: roueslibres1/gh-actions
+          ref: ${{inputs.actions-ref}}
+          path: .github/actions
+      - name: 🔑 Granting private modules access
+        run: |
+          git config --global url."https://${{ secrets.token }}:x-oauth-basic@github.com/roueslibres1".insteadOf "https://github.com/roueslibres1"
+      - name: Install tools
+        uses: ./.github/actions/install-tools
+        with:
+          token: ${{secrets.token}}
+      - name: "🔧 setup go"
+        uses: ./.github/actions/setup-go
+        id: setup_go
+        with:
+          go-version: ${{inputs.go-version}}
+          go-tooling-only: "true"
+      - name: "🧪 Validate commit message(s)"
+        run: |
+          export COMMITSAR_CONFIG_PATH=".devcontainer/configs"
+          commitsar
+      - uses: reviewdog/action-actionlint@v1
+        with:
+          reporter: github-pr-check
+      - uses: reviewdog/action-actionlint@v1
+        with:
+          reporter: github-pr-review
