@@ -22,8 +22,13 @@ runs:
       with: # Grab the latest version
         repo: roueslibres1/fabricator-generate-go
         token: ${{inputs.token}}
-    - name: Install fabricator-generate-go
+    - name: Install fabricator-generate-tool-go
       uses: roueslibres1/action-install-release@main
       with: # Grab the latest version
         repo: roueslibres1/fabricator-generate-tool-go
+        token: ${{inputs.token}}
+    - name: Install fabricator-generate-api-go
+      uses: roueslibres1/action-install-release@main
+      with: # Grab the latest version
+        repo: roueslibres1/fabricator-generate-api-go
         token: ${{inputs.token}}
