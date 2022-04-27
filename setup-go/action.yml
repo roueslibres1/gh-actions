@@ -73,7 +73,7 @@ runs:
         go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.0
         go install code.cestus.io/blaze/cmd/protoc-gen-blaze@v0.6.0
         export BINDIR=/home/runner/go/bin
-        curl -sfL https://git.io/fhJZU | /bin/bash
+        curl -sfL https://raw.githubusercontent.com/Scardiecat/svermaker/master/godownloader.sh | /bin/bash
     - name: svermaker generate
       id: svermaker
       shell: bash
